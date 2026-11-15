@@ -18,13 +18,13 @@ export default function FirstWheel() {
         "Hybrid"
     ], []);
 
-    // ✅ 2. PERCENTAGES STATE (Yahan se default values set karein ya screen se change karein)
+    // ✅ 2. PERCENTAGES STATE (Yahan se default values set karein)
     const [percentages, setPercentages] = useState([
-        25, // Demon Slayer (35%)
-        50, // Demon (40%)
-        8,  // Reincarnation (8%)
-        8,  // Descendant (8%)
-        9   // Hybrid (9%)
+        25, // Demon Slayer
+        25, // Demon
+        28,  // Reincarnation
+        8,  // Descendant
+        9   // Hybrid
     ]);
 
     // ✅ 3. SEPARATE LINK FOR EACH NAME
@@ -188,14 +188,6 @@ export default function FirstWheel() {
         drawWheel(rotationRef.current);
     }, [drawWheel]);
 
-    function handlePercentChange(index, value) {
-        if (spinningRef.current) return;
-        const num = Math.max(0, Math.min(100, Number(value)));
-        const updated = [...percentages];
-        updated[index] = num;
-        setPercentages(updated);
-    }
-
     function spin() {
         if (spinningRef.current) return;
 
@@ -246,13 +238,21 @@ export default function FirstWheel() {
         requestAnimationFrame(animate);
     }
 
-    const totalPercent = percentages.reduce((sum, val) => sum + (Number(val) || 0), 0);
-
     return (
         <>
             <style>{`
+                /* ✅ SCROLL COMPLETELY BAND */
+                html, body {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    overflow: hidden; 
+                    background: #2b0a0a;
+                }
+
                 .wheel-container {
-                    min-height: 100vh;
+                    height: 100vh;
+                    width: 100vw;
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -261,25 +261,27 @@ export default function FirstWheel() {
                     color: white;
                     font-family: Arial, sans-serif;
                     text-align: center;
-                    padding: 20px;
+                    overflow: hidden;
                 }
 
                 .wheel-title-small {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                     color: #ffffff;
                     letter-spacing: 0.5px;
                     margin: 0;
+                    margin-top: 10px;
                 }
 
                 .wheel-selected-name {
-                    font-size: 40px;
+                    font-size: 38px;
                     font-weight: 900;
                     color: #cccccc;
                     letter-spacing: 2px;
-                    margin: 5px 0 20px 0;
+                    margin: 5px 0 10px 0;
                     text-transform: capitalize;
                     text-shadow: 0 4px 8px rgba(0,0,0,0.6);
+                    min-height: 45px;
                 }
 
                 .wheel-box {
@@ -287,6 +289,9 @@ export default function FirstWheel() {
                     width: min(340px, 85vw);
                     aspect-ratio: 1;
                     margin: 0 auto;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
 
                 .wheel-canvas {
@@ -333,48 +338,12 @@ export default function FirstWheel() {
                 .wheel-spin-btn:hover {
                     background: #222;
                 }
-
-                /* ✅ CONTROLS (Percentage change karne ke liye) */
-                .controls {
-                    margin-top: 25px;
-                    background: rgba(0, 0, 0, 0.4);
-                    padding: 15px;
-                    border-radius: 10px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    width: min(300px, 90vw);
-                }
-
-                .control-row {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 14px;
-                }
-
-                .control-row input {
-                    width: 60px;
-                    padding: 4px;
-                    border-radius: 4px;
-                    border: 1px solid #555;
-                    background: #222;
-                    color: white;
-                    text-align: center;
-                }
-
-                .total-text {
-                    font-size: 12px;
-                    color: #ffd166;
-                    margin-top: 5px;
-                }
             `}</style>
 
             <div className="wheel-container">
 
                 <p className="wheel-title-small">Who are u in Demon Slayer Verse?</p>
 
-                {/* ✅ BOX-FREE TEXT */}
                 <h1 className="wheel-selected-name">{result}</h1>
 
                 <div className="wheel-box">
@@ -388,25 +357,6 @@ export default function FirstWheel() {
                     <button className="wheel-spin-btn" onClick={spin}>
                         SPIN
                     </button>
-                </div>
-
-                {/* ✅ PERCENTAGE CONTROLS */}
-                <div className="controls">
-                    {options.map((opt, i) => (
-                        <div className="control-row" key={i}>
-                            <span>{opt}</span>
-                            <input
-                                type="number"
-                                value={percentages[i]}
-                                onChange={(e) => handlePercentChange(i, e.target.value)}
-                                min="0"
-                                max="100"
-                            />
-                        </div>
-                    ))}
-                    <div className="total-text">
-                        Total: {totalPercent}% (Should be 100%)
-                    </div>
                 </div>
 
             </div>
