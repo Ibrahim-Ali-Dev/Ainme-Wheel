@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 export default function FirstWheel() {
 
@@ -11,7 +11,7 @@ export default function FirstWheel() {
 
     const [result, setResult] = useState("Good Luck! 🍀");
 
-    const options = [
+    const options = useMemo(() => [
         "Douna",
         "Zain",
         "Zoro",
@@ -22,9 +22,9 @@ export default function FirstWheel() {
         "Urukodaki",
         "Akaza",
         "Tanjiro"
-    ];
+    ], []);
 
-    const colors = [
+    const colors = useMemo(() => [
         "#168c85",
         "#e74c3c",
         "#348b49",
@@ -35,11 +35,11 @@ export default function FirstWheel() {
         "#9b382e",
         "#315d63",
         "#f5e7df"
-    ];
+    ], []);
 
     const center = 300;
     const radius = 280;
-    const slice = (Math.PI * 2) / options.length;
+    const slice = useMemo(() => (Math.PI * 2) / options.length, [options.length]);
 
     // Initialize sound
     function initSound() {
@@ -110,7 +110,7 @@ export default function FirstWheel() {
     }
 
     // Draw wheel
-    function drawWheel(rotation) {
+    const drawWheel = useCallback((rotation) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -157,12 +157,12 @@ export default function FirstWheel() {
         ctx.strokeStyle = "#cccccc";
         ctx.lineWidth = 10;
         ctx.stroke();
-    }
+    }, [center, colors, options, radius, slice]);
 
     // Initial wheel
     useEffect(() => {
         drawWheel(0);
-    }, []);
+    }, [drawWheel]);
 
     // Spin wheel
     function spin() {

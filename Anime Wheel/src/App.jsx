@@ -1,5 +1,5 @@
 
-import FirstWheel from '/src/wheel for demon slayer/1stwheel.jsx';
+import FirstWheel from './wheel  for demon slayer/1stwheel.jsx';
 
 const App = () => {
     return (
