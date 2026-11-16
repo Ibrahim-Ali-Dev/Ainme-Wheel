@@ -1,6 +1,9 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import SecondWheel from './2ndwheel.jsx';
 
 export default function FirstWheel() {
+    const [showSecondWheel, setShowSecondWheel] = useState(false);
+    const [shouldShowThirdWheel, setShouldShowThirdWheel] = useState(false);
     const canvasRef = useRef(null);
     const audioRef = useRef(null);
     const rotationRef = useRef(0);
@@ -18,27 +21,18 @@ export default function FirstWheel() {
         "Hybrid"
     ], []);
 
-    // ✅ 2. PERCENTAGES STATE (Yahan se default values set karein)
+    // ✅ 2. PERCENTAGES STATE
     const [percentages, setPercentages] = useState([
         25, // Demon Slayer
         25, // Demon
-        28,  // Reincarnation
+        28, // Reincarnation
         8,  // Descendant
         9   // Hybrid
     ]);
 
-    // ✅ 3. SEPARATE LINK FOR EACH NAME
-    const links = useMemo(() => [
-        "https://example.com",
-        "https://example.com",
-        "https://example.com",
-        "https://example.com",
-        "https://example.com"
-    ], []);
-
     // ✅ 4. TEXT SIZE
     const textSizes = useMemo(() => [
-        24, // Demon Slayer
+        28, // Demon Slayer
         28, // Demon
         16, // Reincarnation
         17, // Descendant
@@ -224,18 +218,24 @@ export default function FirstWheel() {
                 requestAnimationFrame(animate);
             } else {
                 const selectedIndex = getSliceIndexAtPointer(rotation);
-                setResult(options[selectedIndex]);
+                const selectedOption = options[selectedIndex];
+                setResult(selectedOption);
+                setShouldShowThirdWheel(selectedOption === "Demon Slayer");
 
                 spinningRef.current = false;
                 playWin();
 
                 setTimeout(() => {
-                    window.location.href = links[selectedIndex];
-                }, 1200);
+                    setShowSecondWheel(true);
+                }, 700);
             }
         }
 
         requestAnimationFrame(animate);
+    }
+
+    if (showSecondWheel) {
+        return <SecondWheel shouldShowThirdWheel={shouldShowThirdWheel} />;
     }
 
     return (
