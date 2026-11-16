@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import BreathingStylesWheel from './2ndwheeld.jsx';
 
 export default function ThirdWheel() {
+    const [breathingStyleCount, setBreathingStyleCount] = useState(null);
     const canvasRef = useRef(null);
     const audioRef = useRef(null);
     const rotationRef = useRef(0);
@@ -18,9 +20,6 @@ export default function ThirdWheel() {
 
     // ✅ 2. PERCENTAGES (3 barabar hisse)
     const percentages = useMemo(() => Array(3).fill(100 / 3), []);
-
-    // ✅ 3. LINKS (Yahan apne links daalein)
-    const links = useMemo(() => Array(3).fill("https://example.com"), []);
 
     // ✅ 4. TEXT SIZE (Bada aur clear)
     const textSizes = useMemo(() => Array(3).fill(32), []);
@@ -191,12 +190,16 @@ export default function ThirdWheel() {
                 playWin();
 
                 setTimeout(() => {
-                    window.location.href = links[selectedIndex];
+                    setBreathingStyleCount(Number(selectedText));
                 }, 1200);
             }
         }
 
         requestAnimationFrame(animate);
+    }
+
+    if (breathingStyleCount !== null) {
+        return <BreathingStylesWheel spinCount={breathingStyleCount} />;
     }
 
     return (
