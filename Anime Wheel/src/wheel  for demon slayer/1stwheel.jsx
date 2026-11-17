@@ -23,7 +23,7 @@ export default function FirstWheel() {
 
     // ✅ 2. PERCENTAGES STATE
     const [percentages, setPercentages] = useState([
-        100, // Demon Slayer
+        25, // Demon Slayer
         25, // Demon
         28, // Reincarnation
         8,  // Descendant
