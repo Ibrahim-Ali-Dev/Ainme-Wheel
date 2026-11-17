@@ -1,6 +1,9 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import FifthWheel from './3rdwheeld.jsx';
 
 export default function FourthWheel({ spinCount }) {
+    const [showMasteryWheel, setShowMasteryWheel] = useState(false);
+    const [masteryStyles, setMasteryStyles] = useState([]);
     const canvasRef = useRef(null);
     const audioRef = useRef(null);
     const rotationRef = useRef(0);
@@ -31,9 +34,6 @@ export default function FourthWheel({ spinCount }) {
         "Beast Breathing"
     ], []);
 
-    // ✅ 2. PERCENTAGES (Sabhi boxes barabar)
-    const percentages = useMemo(() => Array(14).fill(100 / 14), []);
-
     // ✅ 3. TEXT SIZE
     const textSizes = useMemo(() => Array(14).fill(16), []);
 
@@ -58,20 +58,23 @@ export default function FourthWheel({ spinCount }) {
     const center = 300;
     const radius = 280;
 
+    const availableOptions = useMemo(
+        () => options.filter((option) => !selectedStyles.includes(option)),
+        [options, selectedStyles]
+    );
+
     // ✅ PERCENTAGE SE HAR SLICE KA ANGLE CALCULATE KARNA
     const slices = useMemo(() => {
-        const total = percentages.reduce((sum, val) => sum + (Number(val) || 0), 0) || 100;
+        const angle = (Math.PI * 2) / availableOptions.length;
         let currentAngle = 0;
 
-        return percentages.map((pct) => {
-            const validPct = Number(pct) || 0;
-            const angle = (validPct / total) * Math.PI * 2;
+        return availableOptions.map(() => {
             const start = currentAngle;
-            const end = currentAngle + angle;
+            const end = start + angle;
             currentAngle = end;
             return { start, end, angle };
         });
-    }, [percentages]);
+    }, [availableOptions]);
 
     // Top pointer ke niche kaun sa slice hai
     const getSliceIndexAtPointer = useCallback((rotation) => {
@@ -146,8 +149,9 @@ export default function FourthWheel({ spinCount }) {
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, 600, 600);
 
-        options.forEach((option, i) => {
+        availableOptions.forEach((option, i) => {
             if (slices[i].angle <= 0) return;
+            const optionIndex = options.indexOf(option);
 
             const start = rotation + slices[i].start;
             const end = rotation + slices[i].end;
@@ -158,7 +162,7 @@ export default function FourthWheel({ spinCount }) {
             ctx.arc(center, center, radius, start, end);
             ctx.closePath();
 
-            ctx.fillStyle = colors[i];
+            ctx.fillStyle = colors[optionIndex];
             ctx.fill();
             
             // White border
@@ -173,7 +177,7 @@ export default function FourthWheel({ spinCount }) {
             ctx.textAlign = "right";
             ctx.textBaseline = "middle";
             ctx.fillStyle = "#ffffff"; // White text
-            ctx.font = `bold ${textSizes[i]}px Arial`;
+            ctx.font = `bold ${textSizes[optionIndex]}px Arial`;
 
             ctx.fillText(option, radius - 20, 0);
             ctx.restore();
@@ -185,7 +189,7 @@ export default function FourthWheel({ spinCount }) {
         ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
         ctx.lineWidth = 10;
         ctx.stroke();
-    }, [center, colors, options, radius, slices, textSizes]);
+    }, [availableOptions, center, colors, options, radius, slices, textSizes]);
 
     useEffect(() => {
         drawWheel(rotationRef.current);
@@ -228,25 +232,32 @@ export default function FourthWheel({ spinCount }) {
                 requestAnimationFrame(animate);
             } else {
                 const selectedIndex = getSliceIndexAtPointer(rotation);
-                const selectedText = options[selectedIndex];
+                const selectedText = availableOptions[selectedIndex];
                 
                 // ✅ Agar same style dobara aye toh usko skip karna
-                setSelectedStyles((prevStyles) => {
-                    if (!prevStyles.includes(selectedText)) {
-                        return [...prevStyles, selectedText];
-                    }
-                    return prevStyles;
-                });
+                const updatedStyles = selectedStyles.includes(selectedText)
+                    ? selectedStyles
+                    : [...selectedStyles, selectedText];
+                setSelectedStyles(updatedStyles);
 
                 setResult(selectedText);
                 setRemainingSpins((remaining) => remaining - 1);
                 spinningRef.current = false;
                 setIsSpinning(false);
                 playWin();
+
+                if (remainingSpins === 1) {
+                    setMasteryStyles(updatedStyles);
+                    setShowMasteryWheel(true);
+                }
             }
         }
 
         requestAnimationFrame(animate);
+    }
+
+    if (showMasteryWheel) {
+        return <FifthWheel breathingStyles={masteryStyles} />;
     }
 
     return (
@@ -268,8 +279,8 @@ export default function FourthWheel({ spinCount }) {
                     position: absolute; 
                     top: 50%; left: 50%; 
                     transform: translate(-50%, -50%); 
-                    width: 75px; height: 80px; 
-                    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; 
+                    width: 72px; height: 72px;
+                    border-radius: 50%;
                     border: 4px solid white; 
                     background: #0a0a0a; 
                     color: white; 
@@ -278,7 +289,6 @@ export default function FourthWheel({ spinCount }) {
                     z-index: 4; 
                     display: flex; justify-content: center; align-items: center; 
                     box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
-                    padding-bottom: 5px;
                 }
                 .wheel-spin-btn:hover { background: #222; }
                 .wheel-spin-btn:disabled { background: #333; cursor: not-allowed; opacity: 0.7; }

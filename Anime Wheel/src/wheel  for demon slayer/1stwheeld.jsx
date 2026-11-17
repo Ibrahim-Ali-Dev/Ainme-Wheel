@@ -221,8 +221,8 @@ export default function ThirdWheel() {
                     position: absolute; 
                     top: 50%; left: 50%; 
                     transform: translate(-50%, -50%); 
-                    width: 75px; height: 80px; 
-                    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; 
+                    width: 72px; height: 72px;
+                    border-radius: 50%;
                     border: 4px solid white; 
                     background: #0a0a0a; 
                     color: white; 
@@ -231,7 +231,6 @@ export default function ThirdWheel() {
                     z-index: 4; 
                     display: flex; justify-content: center; align-items: center; 
                     box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
-                    padding-bottom: 5px;
                 }
                 .wheel-spin-btn:hover { background: #222; }
             `}</style>

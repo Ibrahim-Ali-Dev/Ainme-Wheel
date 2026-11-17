@@ -11,27 +11,23 @@ export default function SecondWheel({ shouldShowThirdWheel }) {
 
     const [result, setResult] = useState("Good Luck! 🍀");
 
-    // ✅ 1. NAMES (1 se 1000 Tak ke Ranges)
+    // ✅ 1. NAMES (1 se 500 Tak ke Ranges)
     const options = useMemo(() => [
         "1-20", "21-50", "51-100", "101-150", "151-200", "201-250",
-        "251-300", "301-350", "351-400", "401-450", "451-500",
-        "501-550", "551-600", "601-650", "651-700", "701-750",
-        "751-800", "801-850", "851-900", "901-950", "951-1000"
+        "251-300", "301-350", "351-400", "401-450", "451-500"
     ], []);
 
     // ✅ 2. PERCENTAGES
-    const percentages = useMemo(() => Array(21).fill(100 / 21), []);
+    const percentages = useMemo(() => Array(options.length).fill(100 / options.length), [options]);
 
     // ✅ 4. TEXT SIZE
-    const textSizes = useMemo(() => Array(21).fill(14), []);
+    const textSizes = useMemo(() => Array(options.length).fill(14), [options]);
 
     // ✅ 5. COLORS (Purple Theme)
     const colors = useMemo(() => [
-        "#e066ff", "#d94df2", "#cc33e6", "#bf1ad9", "#b300cc", 
-        "#a600bf", "#9900b3", "#8c00a6", "#800099", "#73008c", 
-        "#660080", "#590073", "#4d0066", "#400059", "#33004d", 
-        "#260040", "#1a0033", "#0d0026", "#00001a", "#00000d", 
-        "#000000"
+        "#e066ff", "#d94df2", "#cc33e6", "#bf1ad9", "#b300cc",
+        "#a600bf", "#9900b3", "#8c00a6", "#800099", "#73008c",
+        "#660080"
     ], []);
 
     const center = 300;
