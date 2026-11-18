@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import SixthWheel from './4rthwheeld.jsx';
 
 export default function FifthWheel({ breathingStyles }) {
     const canvasRef = useRef(null);
@@ -8,6 +9,7 @@ export default function FifthWheel({ breathingStyles }) {
     const lastSliceRef = useRef(-1);
     const [currentSpinIndex, setCurrentSpinIndex] = useState(0);
     const [completedResults, setCompletedResults] = useState([]);
+    const [showWeaponWheel, setShowWeaponWheel] = useState(false);
 
     const [result, setResult] = useState("Good Luck! 🍀");
 
@@ -30,9 +32,6 @@ export default function FifthWheel({ breathingStyles }) {
 
     // ✅ 2. PERCENTAGES (Sabhi boxes barabar)
     const percentages = useMemo(() => Array(13).fill(100 / 13), []);
-
-    // ✅ 3. LINKS (Yahan apne links daal sakte hain)
-    const links = useMemo(() => Array(13).fill("https://example.com"), []);
 
     // ✅ 4. TEXT SIZE
     const textSizes = useMemo(() => Array(13).fill(16), []);
@@ -237,13 +236,17 @@ export default function FifthWheel({ breathingStyles }) {
                         spinningRef.current = false;
                     } else {
                         spinningRef.current = false;
-                        window.location.href = links[selectedIndex];
+                        setShowWeaponWheel(true);
                     }
                 }, 1200);
             }
         }
 
         requestAnimationFrame(animate);
+    }
+
+    if (showWeaponWheel) {
+        return <SixthWheel />;
     }
 
     return (
